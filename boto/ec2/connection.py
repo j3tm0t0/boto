@@ -24,6 +24,7 @@
 Represents a connection to the EC2 service.
 """
 
+import os
 import base64
 import warnings
 from datetime import datetime
@@ -61,9 +62,9 @@ from boto.exception import EC2ResponseError
 class EC2Connection(AWSQueryConnection):
 
     APIVersion = boto.config.get('Boto', 'ec2_version', '2012-03-01')
-    DefaultRegionName = boto.config.get('Boto', 'ec2_region_name', 'us-east-1')
-    DefaultRegionEndpoint = boto.config.get('Boto', 'ec2_region_endpoint',
-                                            'ec2.us-east-1.amazonaws.com')
+    DefaultRegionName = boto.config.get('Boto', 'ec2_region_name', 'us-eaast-1' if os.environ.get('EC2_REGION')==None else os.environ.get('EC2_REGION') )
+    DefaultRegionEndpoint = boto.config.get('Boto', 'ec2_region_endpoint','ec2.us-east-1.amazonaws.com' if os.environ.get('EC2_REGION')==None else 'ec2.'+os.environ.get('EC2_REGION')+'.amazonaws.com' )
+
     ResponseError = EC2ResponseError
 
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
